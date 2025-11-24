@@ -1,0 +1,58 @@
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import QueryLibraryDialog from './components/Dialog/QueryLibraryDialog';
+import SettingDialog from './components/Dialog/SettingDialog';
+import Header from './components/Internal/Header';
+import ProcessLogs from './components/Internal/ProcessLogs';
+import ResearchQnA from './components/Research/QnA';
+import ResearchQuery from './components/Research/Query';
+import ResearchReferences from './components/Research/References';
+import ResearchReport from './components/Research/Report';
+import ResearchReportPlan from './components/Research/ReportPlan';
+import ResearchStepper from './components/Research/ResearchStepper';
+import ResearchTasks from './components/Research/Tasks';
+
+function App() {
+  return (
+    <div className="min-h-screen bg-zinc-200">
+      <div className="mx-auto max-w-screen-lg px-4 max-lg:max-w-screen-md">
+        <Header />
+
+        {/* Research Workflow Introduction */}
+        <Box className="mt-6 mb-8">
+          <Typography variant="h4" className="mb-2 font-bold text-gray-800">
+            Deep Research Assistant
+          </Typography>
+          <Typography variant="body1" className="leading-relaxed text-gray-600">
+            Follow this structured research process to get comprehensive insights on any topic. Each
+            step builds on the previous one to ensure thorough and accurate research.
+          </Typography>
+        </Box>
+
+        {/* Research Progress Stepper */}
+        <ResearchStepper />
+
+        {/* Research Components */}
+        <div className="space-y-6 pb-12">
+          <ResearchQuery />
+          <ResearchQnA />
+          <ResearchReportPlan />
+          <ResearchTasks />
+          <ResearchReport />
+          <ResearchReferences />
+        </div>
+
+        {/* Dialogs */}
+        <SettingDialog />
+        <QueryLibraryDialog />
+
+        {/* Process Logs */}
+        <ProcessLogs />
+      </div>
+
+      <footer className="h-6 bg-gray-900"></footer>
+    </div>
+  );
+}
+
+export default App;
