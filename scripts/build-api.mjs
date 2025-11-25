@@ -22,6 +22,9 @@ try {
       '.md': 'text',
       '.bak': 'ts',
     },
+    define: {
+      'process.env.VITE_USE_BROWSER_PROMPTS': '"true"',
+    },
     banner: {
       js: 'import { createRequire } from "module"; const require = createRequire(import.meta.url);',
     },
