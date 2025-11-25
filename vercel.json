@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/research.js": {
+    "api/**/*.js": {
       "maxDuration": 300
     }
   },
