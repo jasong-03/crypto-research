@@ -11,7 +11,7 @@ console.log('Building API function with esbuild...');
 
 try {
   await build({
-    entryPoints: [resolve(rootDir, 'api/research.ts')],
+    entryPoints: [resolve(rootDir, 'api/research.ts.bak')],
     bundle: true,
     outfile: resolve(rootDir, 'api/research.js'),
     platform: 'node',
