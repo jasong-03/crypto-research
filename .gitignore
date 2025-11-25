@@ -35,5 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# bundled api files (built by esbuild)
-api/research.js
+# bundled api files (built by esbuild) - but keep placeholder
+# api/research.js
