@@ -3,12 +3,6 @@
     "api/research.ts": {
       "maxDuration": 300
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/research",
-      "destination": "/api/research"
-    }
-  ]
+  }
 }
 

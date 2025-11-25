@@ -1,0 +1,6 @@
+# Don't ignore src - we need it for API functions
+node_modules
+dist
+.vite
+*.log
+
