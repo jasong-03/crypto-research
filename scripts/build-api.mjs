@@ -20,6 +20,7 @@ try {
     external: ['@vercel/node'],
     loader: {
       '.md': 'text',
+      '.bak': 'ts',
     },
     banner: {
       js: 'import { createRequire } from "module"; const require = createRequire(import.meta.url);',
