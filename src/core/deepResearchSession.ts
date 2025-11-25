@@ -59,9 +59,10 @@ export class DeepResearchSession {
   private readonly options: DeepResearchSessionOptions;
   private readonly callbacks: DeepResearchSessionCallbacks;
 
-  constructor(options: DeepResearchSessionOptions, callbacks: DeepResearchSessionCallbacks = {}) {
+  constructor(options: DeepResearchSessionOptions, callbacks?: DeepResearchSessionCallbacks) {
+    const callbacksValue = callbacks ?? {};
     this.options = options;
-    this.callbacks = callbacks;
+    this.callbacks = callbacksValue;
 
     const store = this.storeApi.getState();
     store.setId(randomUUID());
@@ -71,10 +72,11 @@ export class DeepResearchSession {
 
     this.addLogWithSink = (message: string, type?: Parameters<TaskActions['addLog']>[1], level?: Parameters<TaskActions['addLog']>[2], metadata?: Parameters<TaskActions['addLog']>[3]) => {
       store.addLog(message, type, level, metadata);
-      if (this.callbacks.logSink) {
+      const logSink = this.callbacks.logSink;
+      if (logSink) {
         const latest = store.logs[store.logs.length - 1];
         if (latest) {
-          this.callbacks.logSink(latest);
+          logSink(latest);
         }
       }
     };

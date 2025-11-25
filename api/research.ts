@@ -23,6 +23,16 @@ function getQueryParam(req: VercelRequest): string | undefined {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'GET' && req.method !== 'POST') {
     res.setHeader('Allow', 'GET, POST');
     return res.status(405).json({ error: 'Method not allowed' });
@@ -35,10 +45,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'GEMINI_API_KEY is not configured' });
+    console.error('GEMINI_API_KEY is not configured');
+    return res.status(500).json({ 
+      error: 'GEMINI_API_KEY is not configured',
+      message: 'Please set GEMINI_API_KEY environment variable in Vercel settings'
+    });
   }
 
   try {
+    console.log('Starting research session for query:', query);
+    
     const session = new DeepResearchSession(
       {
         apiKey,
@@ -55,11 +71,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         autoAnswer: true,
       },
       {
-        onLog: () => {},
+        logSink: (entry) => {
+          console.log(`[${entry.type}] ${entry.message}`);
+        },
       }
     );
 
+    console.log('Running research session...');
     const result = await session.run();
+    console.log('Research session completed');
 
     return res.status(200).json({
       query: result.query,
@@ -73,9 +93,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   } catch (error) {
     console.error('API research run failed:', error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
+    console.error('Error details:', {
+      message: errorMessage,
+      stack: errorStack,
+      name: error instanceof Error ? error.name : undefined,
+    });
+
     return res.status(500).json({
       error: 'Research execution failed',
-      details: error instanceof Error ? error.message : String(error),
+      message: errorMessage,
+      ...(process.env.NODE_ENV === 'development' && { stack: errorStack }),
     });
   }
 }

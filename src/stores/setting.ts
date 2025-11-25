@@ -25,10 +25,13 @@ interface SettingActions {
   validateApiKey: (apiKey: string) => Promise<void>;
 }
 
-const createDefaultValues = (): SettingStore => ({
-  ...settingDefaultValues,
-  modelList: [...settingDefaultValues.modelList],
-});
+const createDefaultValues = (): SettingStore => {
+  const defaults = settingDefaultValues;
+  return {
+    ...defaults,
+    modelList: [...defaults.modelList],
+  };
+};
 
 export const useSettingStore = create(
   persist<SettingStore & SettingActions>(
@@ -51,9 +54,10 @@ export const useSettingStore = create(
         const trimmedKey = apiKey.trim();
 
         if (!trimmedKey) {
+          const defaults = settingDefaultValues;
           set({
             isApiKeyValid: false,
-            modelList: [...settingDefaultValues.modelList],
+            modelList: [...defaults.modelList],
             isApiKeyValidating: false,
           });
           return;
@@ -90,18 +94,20 @@ export const useSettingStore = create(
           };
 
           // Reset model selections if they're not in the new list
+          const defaults = settingDefaultValues;
           if (!filteredModelNames.includes(currentState.coreModel)) {
-            updates.coreModel = filteredModelNames[0] || settingDefaultValues.coreModel;
+            updates.coreModel = filteredModelNames[0] || defaults.coreModel;
           }
           if (!filteredModelNames.includes(currentState.taskModel)) {
-            updates.taskModel = filteredModelNames[0] || settingDefaultValues.taskModel;
+            updates.taskModel = filteredModelNames[0] || defaults.taskModel;
           }
 
           set(updates);
         } catch (error) {
           console.error('API key validation failed:', error);
+          const defaults = settingDefaultValues;
           set({
-            modelList: [...settingDefaultValues.modelList],
+            modelList: [...defaults.modelList],
             isApiKeyValid: false,
             isApiKeyValidating: false,
           });

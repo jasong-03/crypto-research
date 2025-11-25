@@ -849,8 +849,8 @@ function createSmoothStreamingHandler(
   let buffer = '';
   let displayedText = ''; // Cache the displayed text instead of joining arrays
   let isStreaming = false;
-  let streamingInterval: ReturnType<typeof setInterval> | null = null;
-  let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+  let streamingInterval: number | null = null;
+  let debounceTimeout: number | null = null;
   let lastUpdateTime = 0;
 
   const scheduleUpdate = (text: string) => {

@@ -16,12 +16,10 @@ export class TerminalDeepResearchSession {
     if (readlineInterface) {
       this.prompt = (question: string, defaultValue?: string) =>
         new Promise<string>(resolve => {
-          readlineInterface.question(
-            defaultValue ? `${question} (${defaultValue}): ` : `${question}: `,
-            answer => {
-              resolve(answer.trim() || defaultValue || '');
-            }
-          );
+          const query = defaultValue ? `${question} (${defaultValue}): ` : `${question}: `;
+          readlineInterface.question(query, (answer: string) => {
+            resolve(answer.trim() || defaultValue || '');
+          });
         });
     }
   }
@@ -33,7 +31,7 @@ export class TerminalDeepResearchSession {
         autoAnswer: this.options.autoAnswer || !this.options.interactive,
       },
       {
-        logSink: entry => {
+        logSink: (entry: import('../types').LogEntry) => {
           const prefix = entry.type.toUpperCase();
           const phase = entry.phase ? ` (${entry.phase})` : '';
           console.log(
