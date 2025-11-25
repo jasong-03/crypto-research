@@ -94,7 +94,7 @@ const SettingDialog = memo(function SettingDialog() {
     update({ isApiKeyValidating: true });
 
     // Debounced validation
-    validationTimeoutRef.current = setTimeout(async () => {
+    validationTimeoutRef.current = window.setTimeout(async () => {
       // Only proceed if this is still the latest validation request
       if (currentSequence === validationSequenceRef.current) {
         try {

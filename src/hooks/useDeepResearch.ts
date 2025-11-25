@@ -857,7 +857,7 @@ function createSmoothStreamingHandler(
     const now = Date.now();
     if (now - lastUpdateTime < debounceMs) {
       if (debounceTimeout) clearTimeout(debounceTimeout);
-      debounceTimeout = setTimeout(() => {
+      debounceTimeout = window.setTimeout(() => {
         onUpdate(text);
         lastUpdateTime = Date.now();
         debounceTimeout = null;
@@ -896,7 +896,7 @@ function createSmoothStreamingHandler(
     isStreaming = true;
     const intervalMs = Math.max(debounceMs, 20);
 
-    streamingInterval = setInterval(() => {
+    streamingInterval = window.setInterval(() => {
       if (buffer.length === 0) return;
 
       const chunkSize = adaptiveSpeed
