@@ -25,12 +25,17 @@ interface SettingActions {
   validateApiKey: (apiKey: string) => Promise<void>;
 }
 
+const createDefaultValues = (): SettingStore => ({
+  ...settingDefaultValues,
+  modelList: [...settingDefaultValues.modelList],
+});
+
 export const useSettingStore = create(
   persist<SettingStore & SettingActions>(
     (set, get) => ({
-      ...settingDefaultValues,
+      ...createDefaultValues(),
       update: values => set(values),
-      reset: () => set(defaultValues),
+      reset: () => set(createDefaultValues()),
       validateSettings: () => {
         const state = get();
         return !!(
@@ -48,7 +53,7 @@ export const useSettingStore = create(
         if (!trimmedKey) {
           set({
             isApiKeyValid: false,
-            modelList: settingDefaultValues.modelList,
+            modelList: [...settingDefaultValues.modelList],
             isApiKeyValidating: false,
           });
           return;
@@ -96,7 +101,7 @@ export const useSettingStore = create(
         } catch (error) {
           console.error('API key validation failed:', error);
           set({
-            modelList: settingDefaultValues.modelList,
+            modelList: [...settingDefaultValues.modelList],
             isApiKeyValid: false,
             isApiKeyValidating: false,
           });

@@ -11,7 +11,7 @@ import runResearcherAgent from '../agents/researcher';
 import runReporterAgent from '../agents/reporter';
 import { createLogHelper } from '../utils/logging';
 import { hashStringSHA256 } from '../utils/hash';
-import type { LogEntry, QnA, ResearchTask } from '../types';
+import type { LogEntry, LogFunction, QnA, ResearchTask } from '../types';
 
 type LogSink = (entry: LogEntry) => void;
 type QnAResponder = (qna: QnA) => Promise<string>;
@@ -54,13 +54,15 @@ export class DeepResearchSession {
   private readonly googleGenAI: GoogleGenAI;
   private researchAbortController: AbortController | null = null;
   private reportAbortController: AbortController | null = null;
-  private readonly addLogWithSink;
-  private readonly log;
+  private readonly addLogWithSink: LogFunction;
+  private readonly log: ReturnType<typeof createLogHelper>;
+  private readonly options: DeepResearchSessionOptions;
+  private readonly callbacks: DeepResearchSessionCallbacks;
 
-  constructor(
-    private readonly options: DeepResearchSessionOptions,
-    private readonly callbacks: DeepResearchSessionCallbacks = {}
-  ) {
+  constructor(options: DeepResearchSessionOptions, callbacks: DeepResearchSessionCallbacks = {}) {
+    this.options = options;
+    this.callbacks = callbacks;
+
     const store = this.storeApi.getState();
     store.setId(randomUUID());
     store.setQuery(options.query);

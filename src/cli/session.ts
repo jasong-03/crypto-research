@@ -8,15 +8,21 @@ type PromptFn = (prompt: string, defaultValue?: string) => Promise<string>;
 
 export class TerminalDeepResearchSession {
   private readonly prompt?: PromptFn;
+  private readonly options: CliOptions;
 
-  constructor(private readonly options: CliOptions, readlineInterface?: ReadlineInterface) {
+  constructor(options: CliOptions, readlineInterface?: ReadlineInterface) {
+    this.options = options;
+
     if (readlineInterface) {
-      this.prompt = async (question: string, defaultValue?: string) => {
-        const answer = await readlineInterface.question(
-          defaultValue ? `${question} (${defaultValue}): ` : `${question}: `
-        );
-        return answer.trim() || defaultValue || '';
-      };
+      this.prompt = (question: string, defaultValue?: string) =>
+        new Promise<string>(resolve => {
+          readlineInterface.question(
+            defaultValue ? `${question} (${defaultValue}): ` : `${question}: `,
+            answer => {
+              resolve(answer.trim() || defaultValue || '');
+            }
+          );
+        });
     }
   }
 
@@ -27,7 +33,7 @@ export class TerminalDeepResearchSession {
         autoAnswer: this.options.autoAnswer || !this.options.interactive,
       },
       {
-        onLog: entry => {
+        logSink: entry => {
           const prefix = entry.type.toUpperCase();
           const phase = entry.phase ? ` (${entry.phase})` : '';
           console.log(

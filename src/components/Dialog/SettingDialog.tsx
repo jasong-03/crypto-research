@@ -52,7 +52,7 @@ const SettingDialog = memo(function SettingDialog() {
   const [toneInfoOpen, setToneInfoOpen] = useState(false);
 
   // Use refs to track validation state and prevent race conditions
-  const validationTimeoutRef = useRef<number | null>(null);
+  const validationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastValidatedKeyRef = useRef<string>('');
   const validationSequenceRef = useRef<number>(0);
 
