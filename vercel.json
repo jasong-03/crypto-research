@@ -1,9 +1,9 @@
 {
   "functions": {
-    "api/research.ts": {
-      "maxDuration": 300,
-      "includeFiles": "src/**"
+    "api/research.js": {
+      "maxDuration": 300
     }
-  }
+  },
+  "buildCommand": "pnpm run build:api && pnpm run build"
 }
 
